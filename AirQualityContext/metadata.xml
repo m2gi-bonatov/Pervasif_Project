@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipojo xmlns="org.apache.felix.ipojo">
+  <component classname="impl.AirQualityContextImpl" name="AirQualityContext">
+    <provides specifications="service.AirQualityContextService"/>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.gasSensor.CarbonDioxydeSensor" field="co2Sensors">
+      <callback method="bindCO2Sensor" type="bind"/>
+      <callback method="unbindCO2Sensor" type="unbind"/>
+    </requires>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.gasSensor.CarbonMonoxydeSensor" field="coSensors">
+      <callback method="bindCOSensor" type="bind"/>
+      <callback method="unbindCOSensor" type="unbind"/>
+    </requires>
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+  </component>
+  <instance component="AirQualityContext" name="AirQualityContext-1"/>
+</ipojo>

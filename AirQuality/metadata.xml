@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipojo xmlns="org.apache.felix.ipojo">
+  <component classname="impl.AirQualityImpl" name="AirQuality">
+    <provides specifications="fr.liglab.adele.icasa.service.scheduler.PeriodicRunnable"/>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.security.Siren" field="sirens">
+      <callback method="bindSiren" type="bind"/>
+      <callback method="unbindSiren" type="unbind"/>
+    </requires>
+    <requires aggregate="true" optional="true" specification="window.Window" field="windows">
+      <callback method="bindWindow" type="bind"/>
+      <callback method="unbindWindow" type="unbind"/>
+    </requires>
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+    <provides specifications="configuration.AirQualityConfiguration"/>
+    <requires specification="service.AirQualityContextService" field="airQualityContextService"/>
+  </component>
+  <component classname="windowImpl.WindowSensorImpl" name="WindowSensor">
+    <provides specifications="window.Window"/>
+  </component>
+  <instance component="AirQuality" name="AirQuality-1"/>
+  <instance component="WindowSensor" name="WindowSensor-2"/>
+</ipojo>
