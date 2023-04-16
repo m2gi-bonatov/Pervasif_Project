@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: AirQualityContext
+Bundle-Name: AirQualityCommunication
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-SymbolicName: AirQualityContext
+Bundle-SymbolicName: AirQualityCommunication
 Bundle-Version: 1.0.0.qualifier
 Created-By: iPOJO 1.12.1
-Export-Package: impl,service
+Export-Package: communication
 Import-Package: fr.liglab.adele.icasa, fr.liglab.adele.icasa.access, fr.
  liglab.adele.icasa.access.command, fr.liglab.adele.icasa.application, f
  r.liglab.adele.icasa.application.impl, fr.liglab.adele.icasa.applicatio
@@ -42,37 +42,14 @@ Import-Package: fr.liglab.adele.icasa, fr.liglab.adele.icasa.access, fr.
  1,2.0.0)", org.apache.felix.ipojo.architecture;version="[1.12.1,2.0.0)"
  , org.json, org.osgi.service.cm;version=1.2, org.osgi.service.log;versi
  on=1.3
-iPOJO-Components: instance { $component="AirQualityContext" $name="AirQu
- alityContext-1" }component { $classname="impl.AirQualityContextImpl" $n
- ame="AirQualityContext" provides { $specifications="service.AirQualityC
- ontextService" }requires { $aggregate="true" $optional="true" $specific
- ation="fr.liglab.adele.icasa.device.gasSensor.CarbonDioxydeSensor" $fie
- ld="co2Sensors" callback { $method="bindCO2Sensor" $type="bind" }callba
- ck { $method="unbindCO2Sensor" $type="unbind" }}requires { $aggregate="
- true" $optional="true" $specification="fr.liglab.adele.icasa.device.gas
- Sensor.CarbonMonoxydeSensor" $field="coSensors" callback { $method="bin
- dCOSensor" $type="bind" }callback { $method="unbindCOSensor" $type="unb
- ind" }}callback { $method="start" $transition="validate" }callback { $m
- ethod="stop" $transition="invalidate" }manipulation { $classname="impl.
- AirQualityContextImpl" interface { $name="service.AirQualityContextServ
- ice" }field { $name="co2Sensors" $type="fr.liglab.adele.icasa.device.ga
- sSensor.CarbonDioxydeSensor[]" }field { $name="coSensors" $type="fr.lig
- lab.adele.icasa.device.gasSensor.CarbonMonoxydeSensor[]" }method { $nam
- e="getCO2Concentration" $return="double" $arguments="{java.lang.String,
- int}" $names="{location,maxDetectorByEnergy}" }method { $name="getCOCon
- centration" $return="double" $arguments="{java.lang.String,int}" $names
- ="{location,maxDetectorByEnergy}" }method { $name="bindCO2Sensor" $argu
- ments="{fr.liglab.adele.icasa.device.gasSensor.CarbonDioxydeSensor,java
- .util.Map}" $names="{carbonDioxydeSensor,properties}" }method { $name="
- unbindCO2Sensor" $arguments="{fr.liglab.adele.icasa.device.gasSensor.Ca
- rbonDioxydeSensor,java.util.Map}" $names="{carbonDioxydeSensor,properti
- es}" }method { $name="bindCOSensor" $arguments="{fr.liglab.adele.icasa.
- device.gasSensor.CarbonMonoxydeSensor,java.util.Map}" $names="{carbonMo
- noxydeSensor,properties}" }method { $name="unbindCOSensor" $arguments="
- {fr.liglab.adele.icasa.device.gasSensor.CarbonMonoxydeSensor,java.util.
- Map}" $names="{carbonMonoxydeSensor,properties}" }method { $name="stop"
-  }method { $name="start" }method { $name="getCOConcentrationDehors" $re
- turn="double" $arguments="{int}" $names="{maxDetectorByEnergy}" }method
-  { $name="getCO2ConcentrationDehors" $return="double" $arguments="{int}
- " $names="{maxDetectorByEnergy}" }}}
+iPOJO-Components: instance { $component="AirQualityCommunication" $name=
+ "AirQualityCommunication-1" }component { $classname="impl.AirQualityCom
+ municationImpl" $name="AirQualityCommunication" provides { $specificati
+ ons="communication.AirQualityCommunication" }callback { $method="start"
+  $transition="validate" }callback { $method="stop" $transition="invalid
+ ate" }manipulation { $classname="impl.AirQualityCommunicationImpl" inte
+ rface { $name="communication.AirQualityCommunication" }method { $name="
+ appelReparateur" $arguments="{java.lang.String}" $names="{salle}" }meth
+ od { $name="appelPolice" }method { $name="appelPompier" }method { $name
+ ="appelSamu" }method { $name="stop" }method { $name="start" }}}
 

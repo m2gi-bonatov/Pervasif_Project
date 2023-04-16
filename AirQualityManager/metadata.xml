@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipojo xmlns="org.apache.felix.ipojo">
+  <component classname="impl.AirQualityManagerImpl" name="AirQualityManager">
+    <provides specifications="manager.AirQualityAdministration"/>
+    <requires specification="configuration.AirQualityConfiguration" field="airQualityConfiguration"/>
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+  </component>
+  <instance component="AirQualityManager" name="AirQualityManager-1"/>
+</ipojo>

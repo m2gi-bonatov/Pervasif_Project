@@ -14,6 +14,7 @@
     <callback method="stop" transition="invalidate"/>
     <provides specifications="configuration.AirQualityConfiguration"/>
     <requires specification="service.AirQualityContextService" field="airQualityContextService"/>
+    <requires specification="communication.AirQualityCommunication" field="communication"/>
   </component>
   <component classname="windowImpl.WindowSensorImpl" name="WindowSensor">
     <provides specifications="window.Window"/>

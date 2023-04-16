@@ -27,23 +27,23 @@ public class AirQualityContextImpl implements AirQualityContextService {
 	 * Si la valeur renvoyer est -1 alors problème, plus aucun détecteur ne fonctionne
 	 */
 	@Override
-	public int getCO2Concentration(String location) {
+	public double getCO2Concentration(String location, int maxDetectorByEnergy) {
 		// TODO Auto-generated method stub
 		double cmpt = 0;
 		double sommeCO2 = 0;
 		double moyenneCO2 = -1;
 		for(CarbonDioxydeSensor co2Sensor: co2Sensors) {
-			if(co2Sensor.getPropertyValue(LOCATION_PROPERTY_NAME).equals(location)) {
-				cmpt++;
-				sommeCO2 = sommeCO2 + co2Sensor.getCO2Concentration();
+			if(cmpt < maxDetectorByEnergy) {
+				if(co2Sensor.getPropertyValue(LOCATION_PROPERTY_NAME).equals(location)) {
+					cmpt++;
+					sommeCO2 = sommeCO2 + co2Sensor.getCO2Concentration();
+				}
 			}
 		}
-		if(cmpt != 0) {
+		if(cmpt > 0) {
 			moyenneCO2 = sommeCO2 / cmpt;
 		}
-		System.out.println("Salut");
-		return 50;
-		//return moyenneCO2;
+		return moyenneCO2;
 	}
 
 	/**
@@ -51,22 +51,22 @@ public class AirQualityContextImpl implements AirQualityContextService {
 	 * Si la valeur renvoyer est -1 alors problème, plus aucun détecteur ne fonctionne
 	 */
 	@Override
-	public int getCOConcentration(String location) {
+	public double getCOConcentration(String location, int maxDetectorByEnergy) {
 		int cmpt = 0;
 		double sommeCO = 0;
 		double moyenneCO = -1;
 		for(CarbonMonoxydeSensor coSensor: coSensors) {
-			if(coSensor.getPropertyValue(LOCATION_PROPERTY_NAME).equals(location)) {
-				cmpt++;
-				sommeCO = sommeCO + coSensor.getCOConcentration();
+			if(cmpt < maxDetectorByEnergy) {
+				if(coSensor.getPropertyValue(LOCATION_PROPERTY_NAME).equals(location)) {
+					cmpt++;
+					sommeCO = sommeCO + coSensor.getCOConcentration();
+				}
 			}
 		}
-		if(cmpt != 0) {
+		if(cmpt > 0) {
 			moyenneCO = sommeCO / cmpt;
 		}
-		System.out.println("Salut");
-		return 50;
-		//return moyenneCO;
+		return moyenneCO;
 	}
 
 	/** Bind Method for co2Sensors dependency */
@@ -97,6 +97,16 @@ public class AirQualityContextImpl implements AirQualityContextService {
 	/** Component Lifecycle Method */
 	public void start() {
 		System.out.println("Start AirQualityContext ...");
+	}
+
+	@Override
+	public double getCOConcentrationDehors(int maxDetectorByEnergy) {
+		return getCOConcentration(LOCATION_UNKNOWN, maxDetectorByEnergy);
+	}
+
+	@Override
+	public double getCO2ConcentrationDehors(int maxDetectorByEnergy) {
+		return getCO2Concentration(LOCATION_UNKNOWN, maxDetectorByEnergy);
 	}
 
 }
