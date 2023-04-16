@@ -50,15 +50,17 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 		if(this.modeActuel == "ETEINT") {
 			System.out.println("Le système est éteint");
 		}else {
-			System.out.println("Récupération du contexte, et traitement des données");
+			System.out.println("Mode : " + getMode() + " Energy : " + maxDetectorByEnergy);
 			double CODehors = airQualityContextService.getCOConcentrationDehors(maxDetectorByEnergy);
 			double CO2Dehors = airQualityContextService.getCO2ConcentrationDehors(maxDetectorByEnergy);
+			boolean urgence = false;
 			
 			for (String salle : salles) {
+				System.out.println("***************************************************************************");
 				double CO2 = airQualityContextService.getCO2Concentration(salle, maxDetectorByEnergy);
 				double CO = airQualityContextService.getCOConcentration(salle, maxDetectorByEnergy);
 				boolean fenetre = false;
-				System.out.println(salle.toUpperCase() + ": Taux CO2 - " + CO2 + " et Taux CO - " + CO);
+				System.out.println(salle.toUpperCase() + ": Taux CO2 - (" + CO2 + ") et Taux CO - (" + CO + ")");
 				
 				
 				//Traitement du CO
@@ -75,18 +77,20 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 						//Ouverture des fenêtres
 						if(CODehors < CO) {
 							fenetre = fenetre || true;
+						}else if(CODehors >= CO) {
+							System.out.println("Le Taux de CO est pire dehors (" + CODehors +") les fenêtres restent fermées");
 						}
 					}else if(this.modeActuel == "SILENCIEUX") {
 						//Ouverture des fenêtres
 						if(CODehors < CO) {
 							fenetre = fenetre || true;
+						}else if(CODehors >= CO) {
+							System.out.println("Le Taux de CO est pire dehors (" + CODehors +") les fenêtres restent fermées");
 						}
 					}
 				}else if(CO >= 2000.0) {
 					//Appel Pompier, Police et Samu
-					communication.appelPolice();
-					communication.appelPompier();
-					communication.appelSamu();
+					urgence = urgence || true;
 					if(this.modeActuel == "PRESENT" || this.modeActuel == "NUIT" || this.modeActuel == "HIVER") {
 						//Action des sirènes
 						for(Siren siren: sirens) {
@@ -95,11 +99,15 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 						//Ouverture des fenêtres
 						if(CODehors < CO) {
 							fenetre = fenetre || true;
+						}else if(CODehors >= CO) {
+							System.out.println("Le Taux de CO est pire dehors (" + CODehors +") les fenêtres restent fermées");
 						}
 					}else if(this.modeActuel == "SILENCIEUX") {
 						//Ouverture des fenêtres
 						if(CODehors < CO) {
 							fenetre = fenetre || true;
+						}else if(CODehors >= CO) {
+							System.out.println("Le Taux de CO est pire dehors (" + CODehors +") les fenêtres restent fermées");
 						}
 					}
 				}
@@ -118,19 +126,20 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 						//Ouverture des fenêtres
 						if(CO2Dehors < CO2) {
 							fenetre = fenetre || true;
+						}else if(CO2Dehors >= CO2) {
+							System.out.println("Le Taux de CO2 est pire dehors (" + CO2Dehors +") les fenêtres restent fermées");
 						}
 					}else if(this.modeActuel == "SILENCIEUX") {
 						//Ouverture des fenêtres
 						if(CO2Dehors < CO2) {
 							fenetre = fenetre || true;
+						}else if(CO2Dehors >= CO2) {
+							System.out.println("Le Taux de CO2 est pire dehors (" + CO2Dehors +") les fenêtres restent fermées");
 						}
 					}
 				}else if(CO2 >= 5000.0) {
 					//Appel Pompier, Police et Samu
-					communication.appelPolice();
-					communication.appelPompier();
-					communication.appelSamu();
-					
+					urgence = urgence || true;
 					if(this.modeActuel == "PRESENT" || this.modeActuel == "NUIT" || this.modeActuel == "HIVER") {
 						//Action des sirènes
 						for(Siren siren: sirens) {
@@ -139,11 +148,15 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 						//Ouverture des fenêtres
 						if(CO2Dehors < CO2) {
 							fenetre = fenetre || true;
+						}else if(CO2Dehors >= CO2) {
+							System.out.println("Le Taux de CO2 est pire dehors (" + CO2Dehors +") les fenêtres restent fermées");
 						}
 					}else if(this.modeActuel == "SILENCIEUX") {
 						//Ouverture des fenêtres
 						if(CO2Dehors < CO2) {
 							fenetre = fenetre || true;
+						}else if(CO2Dehors >= CO2) {
+							System.out.println("Le Taux de CO2 est pire dehors (" + CO2Dehors +") les fenêtres restent fermées");
 						}
 					}
 				}
@@ -163,12 +176,16 @@ public class AirQualityImpl implements PeriodicRunnable, AirQualityConfiguration
 				}
 			}
 			
-			System.out.println(cmptAlarmeCO + " " + cmptAlarmeCO2);
-			
 			if(cmptAlarmeCO == salles.length && cmptAlarmeCO2 == salles.length) {
 				for(Siren siren: sirens) {
 					siren.turnOff();
 				}
+			}
+			
+			if(urgence) {
+				communication.appelPolice();
+				communication.appelPompier();
+				communication.appelSamu();
 			}
 		}
 		
